@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COSMIC-S - Stories</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: #f5f5f7;
+      background-image: 
+        linear-gradient(#e1e1e6 1px, transparent 1px),
+        linear-gradient(90deg, #e1e1e6 1px, transparent 1px);
+      background-size: 20px 20px;
+      color: #111111;
+      font-family: 'Quicksand', sans-serif;
+      padding: 30px 10px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .site-wrapper {
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .top-banner {
+      background: #111111;
+      border: 2px solid #111111;
+      border-radius: 20px;
+      padding: 12px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 4px 4px 0px #111111;
+    }
+
+    .top-banner h1 { 
+      font-size: 2rem; 
+      font-weight: 800; 
+      letter-spacing: 2px; 
+      color: #ffffff;
+    }
+    
+    /* Layout split per desktop */
+    .story-layout {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+
+    .story-sidebar {
+      width: 300px;
+      flex-shrink: 0;
+    }
+
+    /* Pannello di destra pulito */
+    .story-content-pane {
+      flex-grow: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      min-height: 200px;
+      background: #ffffff;
+      border: 2px solid #111111;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 4px 4px 0px #111111;
+    }
+
+    .story-placeholder-text {
+      color: #666;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-top: 5px;
+    }
+
+    /* Scrollable area */
+    .story-scroll-area { 
+      padding: 10px 0; 
+      max-height: 550px; 
+      overflow-y: auto; 
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .story-scroll-area::-webkit-scrollbar {
+      width: 8px;
+    }
+    .story-scroll-area::-webkit-scrollbar-track {
+      background: #f0f0f3;
+      border-radius: 4px;
+    }
+    .story-scroll-area::-webkit-scrollbar-thumb {
+      background: #111111;
+      border-radius: 4px;
+    }
+
+    .story-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+    }
+
+    /* Clickable Story Button in Sidebar */
+    .story-date-btn {
+      font-size: 0.9rem;
+      font-weight: 800;
+      background: #111;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 2px solid #111;
+      cursor: pointer;
+      width: 100%;
+      text-align: center;
+      box-shadow: 3px 3px 0px #444;
+      transition: transform 0.1s ease, background 0.1s ease;
+    }
+
+    .story-date-btn:hover {
+      background: #333;
+      transform: translateY(-1px);
+    }
+
+    .story-date-btn:active {
+      transform: translateY(1px);
+      box-shadow: 1px 1px 0px #444;
+    }
+
+    /* Card Content Details */
+    .story-card-content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .story-link-btn {
+      display: inline-block;
+      background: #111111;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 0.95rem;
+      text-align: center;
+      border: 2px solid #111111;
+      box-shadow: 3px 3px 0px #444;
+      transition: background 0.1s ease, transform 0.1s ease;
+    }
+
+    .story-link-btn:hover {
+      background: #333333;
+      transform: translateY(-1px);
+    }
+
+    .story-desc {
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.6;
+      color: #333333;
+    }
+
+    /* Contenitore card SOLO per mobile */
+    .mobile-card-container {
+      display: none;
+      width: 100%;
+      background: #ffffff;
+      border: 2px solid #111111;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 4px 4px 0px #111111;
+      margin-top: 5px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Versione Mobile reale (schermi piccoli) */
+    @media (max-width: 768px) {
+      .story-layout {
+        flex-direction: column;
+      }
+      .story-sidebar {
+        width: 100%;
+      }
+      .story-content-pane {
+        display: none !important;
+      }
+      .mobile-card-container.active {
+        display: block;
+        animation: fadeIn 0.2s ease-in-out;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="site-wrapper">
+
+    <!-- Header with Home button -->
+    <header class="top-banner">
+      <h1>STORIES</h1>
+      <a href="https://seea-star.github.io/Cosmic-S-Home/" style="background:#F3EEDA; color:#111; border:2px solid #111; padding:8px 14px; border-radius:12px; font-weight:800; font-size:0.75rem; text-decoration:none; box-shadow:2px 2px 0px #111;"><- HOME</a>
+    </header>
+
+    <!-- Layout -->
+    <div class="story-layout">
+      
+      <!-- Sidebar con i titoli delle storie -->
+      <div class="story-sidebar">
+        <div class="story-scroll-area">
+          
+          <div class="story-item">
+            <button class="story-date-btn" onclick="toggleStory('story-1')">Solar Chat</button>
+            <!-- Contenitore mobile per la storia 1 -->
+            <div class="mobile-card-container" id="mobile-story-1">
+              <div class="story-card-content">
+                <a href="URL_DEL_TUO_SITO_SOLAR_CHAT_QUI" target="_blank" class="story-link-btn">Open Story &rarr;</a>
+                <p class="story-desc">A hilarious group chat where the planets of our solar system deal with orbits, administrative restrictions from the Sun, space probes, and cosmic drama.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Puoi aggiungere altre storie qui duplicando il blocco sopra -->
+
+        </div>
+      </div>
+
+      <!-- Pannello di destra per Desktop -->
+      <div class="story-content-pane" id="content-pane">
+        <div class="story-placeholder-text">Select a story to read more</div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    // Dati delle storie associati agli ID
+    const storiesData = {
+      'story-1': {
+        title: 'Solar Chat',
+        url: 'URL_DEL_TUO_SITO_SOLAR_CHAT_QUI',
+        description: 'A hilarious group chat where the planets of our solar system deal with orbits, administrative restrictions from the Sun, space probes, and cosmic drama.'
+      }
+      // Aggiungi qui eventuali nuove storie in futuro
+    };
+
+    function toggleStory(storyId) {
+      const contentPane = document.getElementById('content-pane');
+      const mobileContainer = document.getElementById('mobile-' + storyId);
+      const isDesktopMode = window.getComputedStyle(contentPane).display !== 'none';
+      
+      const isAlreadyOpenMobile = mobileContainer.classList.contains('active');
+      const isAlreadyOpenDesktop = contentPane.dataset.currentStory === storyId;
+
+      if (!isDesktopMode) {
+        // Logica telefono
+        document.querySelectorAll('.mobile-card-container').forEach(c => c.classList.remove('active'));
+        if (!isAlreadyOpenMobile) {
+          mobileContainer.classList.add('active');
+        }
+      } else {
+        // Logica desktop
+        if (!isAlreadyOpenDesktop) {
+          const story = storiesData[storyId];
+          contentPane.innerHTML = `
+            <div class="story-card-content" style="animation: fadeIn 0.2s ease-in-out;">
+              <a href="${story.url}" target="_blank" class="story-link-btn">Open Story &rarr;</a>
+              <p class="story-desc">${story.description}</p>
+            </div>
+          `;
+          contentPane.dataset.currentStory = storyId;
+        } else {
+          contentPane.innerHTML = '<div class="story-placeholder-text">Select a story to read more</div>';
+          delete contentPane.dataset.currentStory;
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>
